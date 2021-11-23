@@ -1,0 +1,37 @@
+[
+  {
+    "flightId": 0,
+    "flightNumber": 1166,
+    "departureAirportIATACode": "SEA",
+    "arrivalAirportIATACode": "MIT",
+    "departureDate": "2019-02-05T08:39:00-03:00"
+  },
+  {
+    "flightId": 1,
+    "flightNumber": 2660,
+    "departureAirportIATACode": "YYT",
+    "arrivalAirportIATACode": "LEW",
+    "departureDate": "2018-09-05T07:04:54-03:00"
+  },
+  {
+    "flightId": 2,
+    "flightNumber": 5303,
+    "departureAirportIATACode": "YYZ",
+    "arrivalAirportIATACode": "PPX",
+    "departureDate": "2020-03-28T04:31:31-03:00"
+  },
+  {
+    "flightId": 3,
+    "flightNumber": 6645,
+    "departureAirportIATACode": "SEA",
+    "arrivalAirportIATACode": "LEW",
+    "departureDate": "2019-04-28T08:46:23-03:00"
+  },
+  {
+    "flightId": 4,
+    "flightNumber": 4960,
+    "departureAirportIATACode": "LAX",
+    "arrivalAirportIATACode": "MIT",
+    "departureDate": "2017-12-15T03:28:04-03:00"
+  }
+]
