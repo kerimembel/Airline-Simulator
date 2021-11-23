@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * Entity class for Flight Entity.
@@ -25,7 +27,5 @@ public class Flight {
     private int flightNumber;
     private String departureAirportIATACode;
     private String arrivalAirportIATACode;
-    private LocalDateTime departureDate;
-
-
+    private ZonedDateTime departureDate;
 }

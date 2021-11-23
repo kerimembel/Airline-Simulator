@@ -24,4 +24,13 @@ public class Cargo {
     private int flightId;
     private List<Baggage> baggage;
     private List<Baggage> cargo;
+
+    @Override
+    public String toString() {
+        return "Cargo{" +
+                "flightId=" + flightId +
+                ", baggage=" + baggage +
+                ", cargo=" + cargo +
+                '}';
+    }
 }

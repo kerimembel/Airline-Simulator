@@ -26,4 +26,13 @@ public class Baggage {
     private String weightUnit;
     private int pieces;
 
+    @Override
+    public String toString() {
+        return "{" +
+                "id=" + id +
+                ", weight=" + weight +
+                ", weightUnit='" + weightUnit + '\'' +
+                ", pieces=" + pieces +
+                '}';
+    }
 }

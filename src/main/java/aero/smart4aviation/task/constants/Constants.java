@@ -2,11 +2,13 @@ package aero.smart4aviation.task.constants;
 
 public class Constants {
 
-    public static final String BASE_SCAN_PACKAGE = "aero.smart4aviation.task.model";
+    public static final String CARGO_FILE = "/cargos.json";
 
-    public static final String CARGO_DB_FILE_LOCATION = "C:/Users/Kerim/Desktop/Smart4Aviation/Task/src/main/resources/";
+    public static final String FLIGHT_FILE = "/flights.json";
 
-    public static final String FLIGHT_DB_FILE_LOCATION = "aero.smart4aviation.task.model";
+    public Constants() throws IllegalAccessException {
+        throw new IllegalAccessException("This is a Constant class!");
+    }
 
 
 }
