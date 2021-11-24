@@ -29,7 +29,6 @@ public class FlightTest {
         flight.setDepartureAirportIATACode("SEA");
         flight.setArrivalAirportIATACode("MIT");
         flight.setDepartureDate(ZonedDateTime.parse("2019-02-05T08:39:00-03:00"));
-        System.out.println(flight.getDepartureDate());
     }
 
     @Test

@@ -1,4 +1,4 @@
-package aero.smart4aviation.task.data;
+package aero.smart4aviation.task.repository;
 
 import aero.smart4aviation.task.model.Flight;
 import org.junit.Assert;
@@ -6,8 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;

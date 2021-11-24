@@ -1,6 +1,5 @@
-package aero.smart4aviation.task.data;
+package aero.smart4aviation.task.repository.contract;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -10,7 +9,7 @@ import java.util.List;
  * @version 0.0.1
  * @since 0.0.1
  */
-public interface Repo<T> {
+public interface IRepository<T> {
 
     List<T> readJson();
 }

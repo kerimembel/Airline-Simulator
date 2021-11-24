@@ -1,4 +1,4 @@
-package aero.smart4aviation.task.data;
+package aero.smart4aviation.task.repository;
 
 import aero.smart4aviation.task.model.Baggage;
 import aero.smart4aviation.task.model.Cargo;

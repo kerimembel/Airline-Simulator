@@ -1,5 +1,6 @@
-package aero.smart4aviation.task.data;
+package aero.smart4aviation.task.repository;
 
+import aero.smart4aviation.task.repository.contract.IRepository;
 import aero.smart4aviation.task.model.Cargo;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -23,20 +24,23 @@ import static aero.smart4aviation.task.constants.Constants.CARGO_FILE;
  * @since 0.0.1
  */
 @Repository
-public class CargoRepository implements Repo<Cargo> {
+public class CargoRepository implements IRepository<Cargo> {
 
     private static Logger logger = Logger.getLogger(CargoRepository.class);
 
     private URL fileUrl;
+    private List<Cargo> cargos;
 
     public CargoRepository(){
 
         this.fileUrl = getClass().getResource(CARGO_FILE);
+        cargos = readJson();
     }
 
     public CargoRepository(URL url){
 
         this.fileUrl = url;
+        cargos = readJson();
     }
 
     @Override
@@ -56,5 +60,13 @@ public class CargoRepository implements Repo<Cargo> {
             logger.error(String.format("IO Exception occured while reading from file '%s'",fileUrl));
             return null;
         }
+    }
+
+    public Cargo findCargoByFlightId(int flightId){
+
+        return cargos.stream()
+                .filter(cargo -> flightId == cargo.getFlightId())
+                .findAny()
+                .orElse(null);
     }
 }
