@@ -4,8 +4,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.mapping.Bag;
 
 import java.util.List;
+
+import static aero.smart4aviation.task.constants.Constants.*;
 
 /**
  * Entity class for Cargo Entity.
@@ -25,13 +28,11 @@ public class Cargo {
     private List<Baggage> cargo;
 
     public long getCargoWeight(){
-        //TODO Conversion between lb and kg (lb = kg * 2.2046)
-        return cargo.stream().mapToLong(c -> c.getWeight()).sum();
+        return convertWeightUnits(cargo);
     }
 
     public long getBaggageWeight(){
-        //TODO Conversion between lb and kg (lb = kg * 2.2046)
-        return baggage.stream().mapToLong(b -> b.getWeight()).sum();
+        return convertWeightUnits(baggage);
     }
 
     public long getTotalWeight(){
@@ -42,6 +43,34 @@ public class Cargo {
     public long getBaggageCount(){
 
         return baggage.stream().mapToLong(Baggage::getPieces).sum();
+    }
+
+    private long convertWeightUnits(List<Baggage> list){
+
+        double baggageWeight = 0;
+
+        if(DEFAULT_WEIGHT_UNIT.equals(KG)){
+
+            for(Baggage baggage : list){
+
+                if(baggage.getWeightUnit().equalsIgnoreCase(LB))
+                    baggageWeight += baggage.getWeight() / 2.2046;
+                else if(baggage.getWeightUnit().equalsIgnoreCase(KG))
+                    baggageWeight += baggage.getWeight();
+            }
+        } else{
+
+            for(Baggage baggage : list){
+
+                if(baggage.getWeightUnit().equalsIgnoreCase(KG))
+                    baggageWeight += baggage.getWeight() * 2.2046;
+                else if(baggage.getWeightUnit().equalsIgnoreCase(LB))
+                    baggageWeight += baggage.getWeight();
+            }
+        }
+
+
+        return (long) baggageWeight;
     }
 
     @Override

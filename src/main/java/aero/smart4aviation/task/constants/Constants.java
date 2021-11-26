@@ -23,7 +23,11 @@ public class Constants {
 
     public static final String DATETIME_FORMAT_ERROR = "The provided datetime format is incorrect : '%s'";
 
-    public static final String DEFAULT_WEIGHT_UNIT = "kg";
+    public static final String KG = "kg";
+
+    public static final String LB = "lb";
+
+    public static final String DEFAULT_WEIGHT_UNIT = KG;
 
 
     public static final String JSON_FILE_NOT_FOUND = "Can not found the file '%s' ";
