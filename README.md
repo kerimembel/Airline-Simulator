@@ -1,9 +1,8 @@
-#Smart4Aviation 
-#Java Web Developer Task 
-
-###Smart4Aviation
+# Smart4Aviation
+# Java Web Developer Task 
 
 This is a Web Application developed by Kerim Embel for **Smart4Aviation**, simulating small Airport operations.
+
 ## Requirements
 
 For building and running the application you need:
@@ -12,7 +11,6 @@ For building and running the application you need:
 - [Maven 3](https://maven.apache.org)
 - [Docker](https://maven.apache.org)
 - [Intellij IDEA](https://www.jetbrains.com/idea/)
-
 
 ## Running the application
 
