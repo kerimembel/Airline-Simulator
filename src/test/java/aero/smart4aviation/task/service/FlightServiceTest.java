@@ -8,15 +8,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 /**
@@ -31,7 +29,9 @@ public class FlightServiceTest {
 
     private FlightService service;
     private Flight flight;
+    private List<Flight> flightList;
     private Cargo cargo;
+    private List<Cargo> cargoList;
     private Baggage baggage;
     private List<Baggage> baggageList;
     private ZonedDateTime dateTime;
@@ -49,7 +49,18 @@ public class FlightServiceTest {
         when(flightRepository.findFlightByNumberAndDate(anyInt(), anyString()))
                 .thenReturn(flight);
 
+        when(flightRepository.findFlightByNumber(anyInt()))
+                .thenReturn(flight);
+
+        when(flightRepository.findFlightByAirportCode(anyString()))
+                .thenReturn(flightList);
+
+        when(flightRepository.findFlightByAirportCodeAndDate(eq("SEA"), anyString()))
+                .thenReturn(flightList);
+
         when(cargoRepository.findCargoByFlightId(0)).thenReturn(cargo);
+        when(cargoRepository.findCargoByFlightId(anyList())).thenReturn(cargoList);
+
 
         service = new FlightService(flightRepository,cargoRepository);
     }
@@ -83,20 +94,34 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void weightInformationByDateTest(){
+    public void countInformationTest(){
 
-        when(flightRepository.findFlightByDate(anyString()))
-                .thenReturn(flight);
+        CountResponse response = service.countInformation("SEA",dateTime.toString());
 
-        WeightResponse response = service.weightInformation(-1,dateTime.toString());
-
-        Assert.assertEquals(cargo.getCargoWeight(),response.getCargoWeight());
-        Assert.assertEquals(cargo.getBaggageWeight(),response.getBaggageWeight());
-        Assert.assertEquals(cargo.getTotalWeight(),response.getTotalWeight());
+        Assert.assertEquals(0,response.getArrivingBaggageCount());
+        Assert.assertEquals(0,response.getArrivingFlightCount());
+        Assert.assertEquals(581,response.getDepartingBaggageCount());
+        Assert.assertEquals(1,response.getDepartingFlightCount());
         Assert.assertEquals("Success",response.getDetail().getMessage());
         Assert.assertEquals(false,response.getDetail().isError());
     }
 
+
+    @Test
+    public void countInformationByFlightNumberTest(){
+
+        when(flightRepository.findFlightByAirportCode(anyString()))
+                .thenReturn(flightList);
+
+        CountResponse response = service.countInformation("SEA",null);
+
+        Assert.assertEquals(0,response.getArrivingBaggageCount());
+        Assert.assertEquals(0,response.getArrivingFlightCount());
+        Assert.assertEquals(581,response.getDepartingBaggageCount());
+        Assert.assertEquals(1,response.getDepartingFlightCount());
+        Assert.assertEquals("Success",response.getDetail().getMessage());
+        Assert.assertEquals(false,response.getDetail().isError());
+    }
 
     @Test
     public void flightInformationNotFoundTest(){
@@ -112,6 +137,37 @@ public class FlightServiceTest {
         Assert.assertEquals(true,response.getDetail().isError());
     }
 
+    @Test
+    public void getBaggageCountTest(){
+
+        long result = service.getBaggageCount(cargoList,flight.getFlightId());
+
+        Assert.assertEquals(581, result);
+    }
+
+    @Test
+    public void getFlightByNumberTest(){
+
+        Flight result = service.getFlight(flight.getFlightId(), dateTime.toString());
+
+        Assert.assertEquals(flight,result);
+
+        result = service.getFlight(flight.getFlightId(), null);
+
+        Assert.assertEquals(flight,result);
+    }
+
+    @Test
+    public void getFlightByAirportCodeTest(){
+
+        List<Flight> result = service.getFlight(flight.getDepartureAirportIATACode(),dateTime.toString());
+
+        Assert.assertEquals(flight, result.get(0));
+
+        result = service.getFlight(flight.getArrivalAirportIATACode(), null);
+
+        Assert.assertEquals(flight, result.get(0));
+    }
 
     public void configureEntities(){
 
@@ -137,5 +193,10 @@ public class FlightServiceTest {
         cargo.setFlightId(0);
         cargo.setCargo(baggageList);
         cargo.setBaggage(baggageList);
+
+        flightList = new ArrayList<>();
+        cargoList = new ArrayList<>();
+        flightList.add(flight);
+        cargoList.add(cargo);
     }
 }

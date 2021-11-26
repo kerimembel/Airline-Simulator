@@ -119,11 +119,17 @@ public class FlightService {
 
     public long getBaggageCount(List<Cargo> cargos, int flightID){
 
-        return cargos.stream()
-                .filter(cargo -> flightID == cargo.getFlightId())
-                .findFirst()
-                .orElse(null)
-                .getBaggageCount();
+        try{
+
+            return cargos.stream()
+                    .filter(cargo -> flightID == cargo.getFlightId())
+                    .findFirst()
+                    .orElse(null)
+                    .getBaggageCount();
+        } catch (NullPointerException ex){
+            logger.error(String.format(CARGO_NOT_FOUND, flightID));
+            return 0;
+        }
     }
 
     public Flight getFlight(int flightNumber, String departureDate){

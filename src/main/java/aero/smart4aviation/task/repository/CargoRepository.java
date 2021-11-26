@@ -1,8 +1,7 @@
 package aero.smart4aviation.task.repository;
 
-import aero.smart4aviation.task.repository.contract.IRepository;
 import aero.smart4aviation.task.model.Cargo;
-
+import aero.smart4aviation.task.repository.contract.IRepository;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.log4j.Logger;

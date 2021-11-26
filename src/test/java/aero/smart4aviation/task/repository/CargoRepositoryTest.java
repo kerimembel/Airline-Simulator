@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -23,6 +25,7 @@ public class CargoRepositoryTest {
     private List<Cargo> cargos;
     private Cargo cargo;
     private Baggage baggage;
+    private List<Integer> flightIds;
 
     @Before
     public void setUp() {
@@ -53,25 +56,36 @@ public class CargoRepositoryTest {
     public void findCargoTest(){
 
         Assert.assertNotNull(repository.findCargoByFlightId(0));
+        Assert.assertNotNull(repository.findCargoByFlightId(flightIds));
+
     }
 
     @Test
     public void findCargoNullTest(){
 
+        flightIds.clear();
+        flightIds.add(-1);
         Assert.assertNull(repository.findCargoByFlightId(-1));
+        Assert.assertEquals(Collections.emptyList(),repository.findCargoByFlightId(flightIds));
+
     }
+
+
 
     private void configureEntity(){
 
-        cargo = new Cargo();
         baggage = new Baggage();
+        flightIds = new ArrayList<>();
 
+        cargo = new Cargo();
         cargo.setFlightId(0);
-
         baggage.setId(0);
         baggage.setWeight(814);
         baggage.setWeightUnit("lb");
         baggage.setPieces(581);
+
+        flightIds.add(0);
+        flightIds.add(1);
     }
 
 }

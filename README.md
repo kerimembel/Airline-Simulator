@@ -20,8 +20,7 @@ The project folder downloaded from Github as zip or cloned is opened on Intellij
 
 > **Note:** To run the application with Docker, you must have Docker installed on your computer.
 
-Go to the directory where the project is located on Command Line.
-
+After running Docker, go to the directory where the project is located on Command Line.
 
 With this command, the previously created .jar file is built with Docker.
 
@@ -63,20 +62,21 @@ departureDate parameter is optional but if we do not provide flightNumber parame
 
 Example GET Request : http://localhost:8080/api/flight/weights?flightNumber=1166&departureDate=2019-02-05T08:39:00-03:00
 
+Weight values are given in "kg" unit in the response given by the service. It can be changed parametrically and "lb" values can also be obtained.
 
 Succesfull Response:
 
 ```javascript
 {
     "cargoWeight": 1692,
-        "baggageWeight": 3433,
-        "totalWeight": 5125,
-        "weightUnit": "kg",
-        "detail": {
-        "timestamp": "26-11-2021 12:30:06",
-            "message": "Success",
-            "returnCode": 200,
-            "error": false
+    "baggageWeight": 3433,
+    "totalWeight": 5125,
+    "weightUnit": "kg",
+    "detail": {
+    "timestamp": "26-11-2021 12:30:06",
+        "message": "Success",
+        "returnCode": 200,
+        "error": false
     }
 }
 ```
@@ -86,14 +86,14 @@ Error Response:
 ```javascript
 {
     "cargoWeight": 0,
-        "baggageWeight": 0,
-        "totalWeight": 0,
-        "weightUnit": "kg",
-        "detail": {
-        "timestamp": "26-11-2021 12:24:57",
-            "message": "Required request parameter 'flightNumber' for method parameter type Integer is not present",
-            "returnCode": 400,
-            "error": true
+    "baggageWeight": 0,
+    "totalWeight": 0,
+    "weightUnit": "kg",
+    "detail": {
+    "timestamp": "26-11-2021 12:24:57",
+        "message": "Required request parameter 'flightNumber' for method parameter type Integer is not present",
+        "returnCode": 400,
+        "error": true
     }
 }
 ```
