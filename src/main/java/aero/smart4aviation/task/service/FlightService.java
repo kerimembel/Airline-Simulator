@@ -1,21 +1,22 @@
 package aero.smart4aviation.task.service;
 
 import aero.smart4aviation.task.model.Cargo;
+import aero.smart4aviation.task.model.CountResponse;
 import aero.smart4aviation.task.model.Flight;
-import aero.smart4aviation.task.model.FlightResponse;
+import aero.smart4aviation.task.model.WeightResponse;
 import aero.smart4aviation.task.repository.CargoRepository;
 import aero.smart4aviation.task.repository.FlightRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static aero.smart4aviation.task.constants.Constants.CARGO_NOT_FOUND;
-import static aero.smart4aviation.task.constants.Constants.FLIGHT_NOT_FOUND;
+import static aero.smart4aviation.task.constants.Constants.*;
 
 /**
- * Service for flight informations.
+ * Service for flight operations.
  *
  * @author Kerim Embel
  * @version 0.0.1
@@ -36,16 +37,17 @@ public class FlightService {
         this.cargoRepository = cargoRepository;
     }
 
+    public WeightResponse weightInformation(int flightNumber, String departureDate){
 
-    public FlightResponse flightInformation(int flightNumber, String departureDate){
+        WeightResponse response = new WeightResponse();
 
-        FlightResponse response = new FlightResponse();
+        Flight flight = getFlight(flightNumber,departureDate);
 
-        Flight flight = flightRepository.findFlightByNumberAndDate(flightNumber,departureDate);
         if(flight == null){
-            logger.error(String.format(FLIGHT_NOT_FOUND, flightNumber, departureDate));
+            logger.error(String.format(FLIGHT_NUMBER_NOT_FOUND, flightNumber, departureDate));
             response.setIsError(true);
-            response.setMessage(String.format(FLIGHT_NOT_FOUND, flightNumber, departureDate));
+            response.setMessage(String.format(FLIGHT_NUMBER_NOT_FOUND, flightNumber, departureDate));
+            response.setReturnCode(404);
             return response;
         }
 
@@ -54,6 +56,7 @@ public class FlightService {
             logger.error(String.format(CARGO_NOT_FOUND,flight.getFlightId()));
             response.setIsError(true);
             response.setMessage(String.format(CARGO_NOT_FOUND,flight.getFlightId()));
+            response.setReturnCode(404);
             return response;
         }
 
@@ -62,6 +65,84 @@ public class FlightService {
         response.setTotalWeight(cargo.getTotalWeight());
 
         return response;
+    }
+
+    public CountResponse countInformation(String airportCode, String departureDate) {
+
+        CountResponse response = new CountResponse();
+
+        List<Flight> flights  = getFlight(airportCode, departureDate);
+        if(flights.isEmpty()){
+            logger.error(String.format(FLIGHT_AIRPORT_CODE_NOT_FOUND, departureDate , airportCode));
+            response.setIsError(true);
+            response.setMessage(String.format(FLIGHT_AIRPORT_CODE_NOT_FOUND, departureDate , airportCode));
+            response.setReturnCode(404);
+            return response;
+        }
+
+        List<Integer> flightIDs = flights.stream().map(Flight::getFlightId).collect(Collectors.toList());
+        List<Cargo> cargos = cargoRepository.findCargoByFlightId(flightIDs);
+        if(cargos.isEmpty()){
+            logger.error(String.format(CARGO_NOT_FOUND,flightIDs));
+            response.setIsError(true);
+            response.setMessage(String.format(CARGO_NOT_FOUND,flightIDs));
+            response.setReturnCode(404);
+            return response;
+        }
+
+        int arrivingFlightCount = 0;
+        int departingFlightCount = 0;
+        long departingBaggageCount = 0;
+        long arrivingBaggageCount = 0;
+
+        for(Flight flight: flights){
+
+            if(flight.getArrivalAirportIATACode().equalsIgnoreCase(airportCode)){
+
+                arrivingFlightCount += 1;
+                arrivingBaggageCount += getBaggageCount(cargos,flight.getFlightId());
+
+            } else if(flight.getDepartureAirportIATACode().equalsIgnoreCase(airportCode)){
+
+                departingFlightCount += 1;
+                departingBaggageCount += getBaggageCount(cargos,flight.getFlightId());
+            }
+        }
+
+        response.setArrivingFlightCount(arrivingFlightCount);
+        response.setDepartingFlightCount(departingFlightCount);
+        response.setDepartingBaggageCount(departingBaggageCount);
+        response.setArrivingBaggageCount(arrivingBaggageCount);
+
+        return response;
+    }
+
+    public long getBaggageCount(List<Cargo> cargos, int flightID){
+
+        return cargos.stream()
+                .filter(cargo -> flightID == cargo.getFlightId())
+                .findFirst()
+                .orElse(null)
+                .getBaggageCount();
+    }
+
+    public Flight getFlight(int flightNumber, String departureDate){
+
+       if(departureDate == null)
+            return flightRepository.findFlightByNumber(flightNumber);
+
+       else
+            return flightRepository.findFlightByNumberAndDate(flightNumber,departureDate);
+    }
+
+
+    public List<Flight> getFlight(String airportCode, String departureDate) {
+
+      if(departureDate == null)
+            return flightRepository.findFlightByAirportCode(airportCode);
+
+      else
+            return flightRepository.findFlightByAirportCodeAndDate(airportCode,departureDate);
     }
 
 

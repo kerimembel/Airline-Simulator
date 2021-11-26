@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static aero.smart4aviation.task.constants.Constants.CARGO_FILE;
 
@@ -68,5 +69,14 @@ public class CargoRepository implements IRepository<Cargo> {
                 .filter(cargo -> flightId == cargo.getFlightId())
                 .findAny()
                 .orElse(null);
+    }
+
+    public List<Cargo> findCargoByFlightId(List<Integer> flightIds){
+
+        return cargos.stream()
+                .filter(cargo -> flightIds.stream()
+                        .anyMatch(flightId ->
+                                flightId == cargo.getFlightId()))
+                .collect(Collectors.toList());
     }
 }

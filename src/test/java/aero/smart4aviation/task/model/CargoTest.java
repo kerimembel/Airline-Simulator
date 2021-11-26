@@ -23,18 +23,26 @@ public class CargoTest {
 
     @Before
     public void setUp() {
-        cargo = new Cargo();
-        baggage = new Baggage();
         baggageList = new ArrayList<>();
+        cargo = new Cargo();
 
+        baggage = new Baggage();
         baggage.setId(0);
         baggage.setWeight(814);
         baggage.setWeightUnit("lb");
         baggage.setPieces(581);
         baggageList.add(baggage);
 
-        cargo.setFlightId(0);
         cargo.setCargo(baggageList);
+
+        baggage = new Baggage();
+        baggage.setId(1);
+        baggage.setWeight(1);
+        baggage.setWeightUnit("lb");
+        baggage.setPieces(1);
+        baggageList.add(baggage);
+
+        cargo.setFlightId(0);
         cargo.setBaggage(baggageList);
     }
 
@@ -48,6 +56,24 @@ public class CargoTest {
         testEntity.setBaggage(baggageList);
 
         Assert.assertEquals(cargo,testEntity);
+    }
+
+    @Test
+    public void baggageWeightTest(){
+
+        Assert.assertEquals(815,cargo.getBaggageWeight());
+    }
+
+    @Test
+    public void cargoWeightTest(){
+
+        Assert.assertEquals(814,cargo.getCargoWeight());
+    }
+
+    @Test
+    public void totalWeightTest(){
+
+        Assert.assertEquals(1629,cargo.getTotalWeight());
     }
 
 }

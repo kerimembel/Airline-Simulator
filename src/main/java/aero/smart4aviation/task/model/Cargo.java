@@ -39,6 +39,11 @@ public class Cargo {
         return getBaggageWeight() + getCargoWeight();
     }
 
+    public long getBaggageCount(){
+
+        return baggage.stream().mapToLong(Baggage::getPieces).sum();
+    }
+
     @Override
     public String toString() {
         return "Cargo{" +

@@ -3,7 +3,6 @@ package aero.smart4aviation.task.service;
 import aero.smart4aviation.task.model.*;
 import aero.smart4aviation.task.repository.CargoRepository;
 import aero.smart4aviation.task.repository.FlightRepository;
-import org.hibernate.mapping.Bag;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +15,8 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
@@ -45,7 +46,7 @@ public class FlightServiceTest {
 
         configureEntities();
 
-        when(flightRepository.findFlightByNumberAndDate(1166,dateTime.toString()))
+        when(flightRepository.findFlightByNumberAndDate(anyInt(), anyString()))
                 .thenReturn(flight);
 
         when(cargoRepository.findCargoByFlightId(0)).thenReturn(cargo);
@@ -54,9 +55,25 @@ public class FlightServiceTest {
     }
 
     @Test
-    public void flightInformationTest(){
+    public void weightInformationTest(){
 
-        FlightResponse response = service.flightInformation(1166,dateTime.toString());
+        WeightResponse response = service.weightInformation(1166,dateTime.toString());
+
+        Assert.assertEquals(cargo.getCargoWeight(),response.getCargoWeight());
+        Assert.assertEquals(cargo.getBaggageWeight(),response.getBaggageWeight());
+        Assert.assertEquals(cargo.getTotalWeight(),response.getTotalWeight());
+        Assert.assertEquals("Success",response.getDetail().getMessage());
+        Assert.assertEquals(false,response.getDetail().isError());
+    }
+
+
+    @Test
+    public void weightInformationByFlightNumberTest(){
+
+        when(flightRepository.findFlightByNumber(anyInt()))
+                .thenReturn(flight);
+
+        WeightResponse response = service.weightInformation(1166,null);
 
         Assert.assertEquals(cargo.getCargoWeight(),response.getCargoWeight());
         Assert.assertEquals(cargo.getBaggageWeight(),response.getBaggageWeight());
@@ -66,18 +83,33 @@ public class FlightServiceTest {
     }
 
     @Test
+    public void weightInformationByDateTest(){
+
+        when(flightRepository.findFlightByDate(anyString()))
+                .thenReturn(flight);
+
+        WeightResponse response = service.weightInformation(-1,dateTime.toString());
+
+        Assert.assertEquals(cargo.getCargoWeight(),response.getCargoWeight());
+        Assert.assertEquals(cargo.getBaggageWeight(),response.getBaggageWeight());
+        Assert.assertEquals(cargo.getTotalWeight(),response.getTotalWeight());
+        Assert.assertEquals("Success",response.getDetail().getMessage());
+        Assert.assertEquals(false,response.getDetail().isError());
+    }
+
+
+    @Test
     public void flightInformationNotFoundTest(){
 
         when(flightRepository.findFlightByNumberAndDate(0000,dateTime.toString()))
                 .thenReturn(null);
 
-        FlightResponse response = service.flightInformation(0000,dateTime.toString());
+        WeightResponse response = service.weightInformation(0000,dateTime.toString());
 
         Assert.assertEquals(0,response.getCargoWeight());
         Assert.assertEquals(0,response.getBaggageWeight());
         Assert.assertEquals(0,response.getTotalWeight());
         Assert.assertEquals(true,response.getDetail().isError());
-
     }
 
 

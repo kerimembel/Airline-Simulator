@@ -22,13 +22,11 @@ public class FlightRepositoryTest {
     private FlightRepository repository;
     private List<Flight> flights;
     private Flight flight;
-
-    DateTimeFormatter parser;
+    private ZonedDateTime dateTime;
 
     @Before
     public void setUp() {
 
-        parser = DateTimeFormatter.ISO_DATE_TIME;
         configureEntity();
 
         repository = new FlightRepository();
@@ -51,14 +49,37 @@ public class FlightRepositoryTest {
         Assert.assertNull(flights);
     }
 
+    @Test
+    public void findFlightByNumberAndDateTest(){
+
+        Assert.assertNotNull(repository.findFlightByNumberAndDate(1166,dateTime.toString()));
+        Assert.assertNull(repository.findFlightByNumberAndDate(11,dateTime.toString()));
+    }
+
+    @Test
+    public void findFlightByNumberTest(){
+
+        Assert.assertNotNull(repository.findFlightByNumber(1166));
+        Assert.assertNull(repository.findFlightByNumber(11));
+    }
+
+    @Test
+    public void findFlightByDateTest(){
+
+        Assert.assertNotNull(repository.findFlightByDate(dateTime.toString()));
+        Assert.assertNull(repository.findFlightByDate(""));
+    }
+
     private void configureEntity(){
+
+        dateTime = ZonedDateTime.parse("2019-02-05T08:39:00-03:00");
 
         flight = new Flight();
         flight.setFlightId(0);
         flight.setFlightNumber(1166);
         flight.setDepartureAirportIATACode("SEA");
         flight.setArrivalAirportIATACode("MIT");
-        flight.setDepartureDate(ZonedDateTime.parse("2019-02-05T08:39:00-03:00"));
+        flight.setDepartureDate(dateTime);
     }
 
 

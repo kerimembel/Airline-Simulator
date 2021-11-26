@@ -37,7 +37,6 @@ public class CargoRepositoryTest {
 
         Assert.assertEquals(cargo.getFlightId(),cargos.get(0).getFlightId());
         Assert.assertEquals(baggage,cargos.get(0).getBaggage().get(0));
-
     }
 
     @Test
@@ -48,6 +47,18 @@ public class CargoRepositoryTest {
         cargos = repository.readJson();
 
         Assert.assertNull(cargos);
+    }
+
+    @Test
+    public void findCargoTest(){
+
+        Assert.assertNotNull(repository.findCargoByFlightId(0));
+    }
+
+    @Test
+    public void findCargoNullTest(){
+
+        Assert.assertNull(repository.findCargoByFlightId(-1));
     }
 
     private void configureEntity(){
