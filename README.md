@@ -1,7 +1,6 @@
-# Smart4Aviation
-# Java Web Developer Task 
+# Airline Simulator
 
-This is a Web Application developed by Kerim Embel for **Smart4Aviation**, simulating small Airport operations.
+This is a Web Application developed by Kerim Embel to simulate minor Airport operations.
 
 ## Requirements
 
